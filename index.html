@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Moblin + Kick – jatkuva laskuri</title>
+<style>
+  :root {
+    --text: #ffffff;
+    --muted: rgba(255,255,255,.72);
+    --panel: rgba(10,12,16,.48);
+    --accent: #53e08a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; width: 100%; height: 100%; overflow: hidden;
+    background: transparent; color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  }
+  body { display:flex; align-items:center; justify-content:center; }
+  .wrap {
+    display:inline-flex; flex-direction:column; align-items:center; gap:7px;
+    padding: 13px 22px 15px; border-radius: 15px;
+    background: var(--panel); text-align:center;
+    text-shadow: 0 2px 7px rgba(0,0,0,.9);
+    max-width: 96vw;
+  }
+  .label {
+    font-size: clamp(11px, 2.1vw, 19px); font-weight: 800;
+    letter-spacing: .19em; color: var(--accent);
+  }
+  .time {
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+    font-weight: 850; line-height: 1.05;
+    font-size: clamp(28px, 7vw, 76px);
+    letter-spacing: .025em;
+  }
+  .sub { color:var(--muted); font-size:clamp(9px,1.5vw,13px); letter-spacing:.08em; }
+  #admin {
+    display:none; position:fixed; right:10px; bottom:10px;
+    padding:10px 13px; border:1px solid rgba(255,255,255,.35);
+    border-radius:10px; background:#15191f; color:white;
+    font-size:14px;
+  }
+  #admin button {
+    border:0; border-radius:7px; padding:8px 11px; margin-left:8px;
+    background:#d84a4a; color:white; font-weight:700;
+  }
+  body.admin #admin { display:block; }
+</style>
+</head>
+<body>
+  <main class="wrap" aria-label="Jatkuva ajanlaskuri">
+    <div class="label">KOKONAISAIKA</div>
+    <div class="time" id="timer">00:00:00</div>
+    <div class="sub">AIKA KERTYY JATKUVASTI</div>
+  </main>
+  <div id="admin">Hallinta <button id="reset">Nollaa laskuri</button></div>
+
+<script>
+(() => {
+  "use strict";
+  const STORAGE_KEY = "moblinKickPersistentCountUpStart_v1";
+  const params = new URLSearchParams(location.search);
+  if (params.get("admin") === "1") document.body.classList.add("admin");
+
+  function getStart() {
+    let saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) {
+      saved = String(Date.now());
+      localStorage.setItem(STORAGE_KEY, saved);
+    }
+    const parsed = Number(saved);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : Date.now();
+  }
+
+  let startTime = getStart();
+  const timer = document.getElementById("timer");
+
+  function pad(n) { return String(n).padStart(2, "0"); }
+
+  function render() {
+    const elapsed = Math.max(0, Math.floor((Date.now() - startTime) / 1000));
+    const days = Math.floor(elapsed / 86400);
+    const hours = Math.floor((elapsed % 86400) / 3600);
+    const minutes = Math.floor((elapsed % 3600) / 60);
+    const seconds = elapsed % 60;
+
+    // Näytä päivät vasta kun laskuri on ylittänyt 24 tuntia.
+    timer.textContent = days > 0
+      ? `${days} pv ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+      : `${pad(hours + days * 24)}:${pad(minutes)}:${pad(seconds)}`;
+  }
+
+  document.getElementById("reset").addEventListener("click", () => {
+    if (!confirm("Nollataanko jatkuva laskuri? Tätä ei voi perua.")) return;
+    startTime = Date.now();
+    localStorage.setItem(STORAGE_KEY, String(startTime));
+    render();
+  });
+
+  render();
+  setInterval(render, 250);
+})();
+</script>
+</body>
+</html>
