@@ -71,48 +71,48 @@
 <script>
 (() => {
   "use strict";
-  const STORAGE_KEY = "moblinKickPersistentCountUpStart_v1";
-  const params = new URLSearchParams(location.search);
-  if (params.get("admin") === "1") document.body.classList.add("admin");
 
- function getStart() {
-  const STORAGE_KEY = "moblinKickPersistentCountUpStart_v1";
-  const start = new Date(2026, 10, 1, 18, 0, 0, 0).getTime();
+  const STORAGE_KEY = "moblinKickPersistentCountUpStart_v2";
 
-  let saved = localStorage.getItem(STORAGE_KEY);
+  function getStart() {
+    let saved = localStorage.getItem(STORAGE_KEY);
 
-  if (!saved || Number(saved) >= Date.now()) {
-    saved = String(start);
-    localStorage.setItem(STORAGE_KEY, saved);
+    if (!saved) {
+      const start = new Date(2026, 10, 1, 18, 0, 0, 0);
+      saved = String(start.getTime());
+      localStorage.setItem(STORAGE_KEY, saved);
+    }
+
+    return Number(saved);
   }
 
-  return Number(saved);
-}
-
-  const parsed = Number(saved);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : Date.now();
-}
-
   let startTime = getStart();
+
   const timer = document.getElementById("timer");
 
-  function pad(n) { return String(n).padStart(2, "0"); }
+  function pad(n) {
+    return String(n).padStart(2, "0");
+  }
 
   function render() {
-    const elapsed = Math.max(0, Math.floor((Date.now() - startTime) / 1000));
+    const elapsed = Math.max(
+      0,
+      Math.floor((Date.now() - startTime) / 1000)
+    );
+
     const days = Math.floor(elapsed / 86400);
     const hours = Math.floor((elapsed % 86400) / 3600);
     const minutes = Math.floor((elapsed % 3600) / 60);
     const seconds = elapsed % 60;
 
-    // Näytä päivät vasta kun laskuri on ylittänyt 24 tuntia.
     timer.textContent = days > 0
       ? `${days} pv ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
       : `${pad(hours + days * 24)}:${pad(minutes)}:${pad(seconds)}`;
   }
 
   document.getElementById("reset").addEventListener("click", () => {
-    if (!confirm("Nollataanko jatkuva laskuri? Tätä ei voi perua.")) return;
+    if (!confirm("Nollataanko laskuri?")) return;
+
     startTime = Date.now();
     localStorage.setItem(STORAGE_KEY, String(startTime));
     render();
