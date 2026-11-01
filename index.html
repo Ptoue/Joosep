@@ -29,7 +29,7 @@
     letter-spacing: .19em; color: var(--accent);
   }
  .time {
-    color: #ffff00;
+    color: #53e08a;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
     font-weight: 850;
@@ -67,16 +67,19 @@
   const params = new URLSearchParams(location.search);
   if (params.get("admin") === "1") document.body.classList.add("admin");
 
-  function getStart() {
+ function getStart() {
+  const STORAGE_KEY = "moblinKickPersistentCountUpStart_v1";
+  const start = new Date(2026, 10, 1, 18, 0, 0, 0).getTime();
+
   let saved = localStorage.getItem(STORAGE_KEY);
 
-  if (!saved) {
-    const start = new Date();
-    start.setHours(18, 0, 0, 0);
-
-    saved = String(start.getTime());
+  if (!saved || Number(saved) >= Date.now()) {
+    saved = String(start);
     localStorage.setItem(STORAGE_KEY, saved);
   }
+
+  return Number(saved);
+}
 
   const parsed = Number(saved);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : Date.now();
