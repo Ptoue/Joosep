@@ -65,14 +65,19 @@
   if (params.get("admin") === "1") document.body.classList.add("admin");
 
   function getStart() {
-    let saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) {
-      saved = String(Date.now());
-      localStorage.setItem(STORAGE_KEY, saved);
-    }
-    const parsed = Number(saved);
-    return Number.isFinite(parsed) && parsed > 0 ? parsed : Date.now();
+  let saved = localStorage.getItem(STORAGE_KEY);
+
+  if (!saved) {
+    const start = new Date();
+    start.setHours(18, 0, 0, 0);
+
+    saved = String(start.getTime());
+    localStorage.setItem(STORAGE_KEY, saved);
   }
+
+  const parsed = Number(saved);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : Date.now();
+}
 
   let startTime = getStart();
   const timer = document.getElementById("timer");
