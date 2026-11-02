@@ -4,46 +4,60 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Joosepin jatkuva laskuri</title>
+
 <style>
   :root {
     --text: #ffffff;
-    --muted: rgba(255,255,255,.72);
-    --panel: rgba(10,12,16,.48);
-    --accent: #ffff00;
+    --accent: #ffffff;
   }
-  * { box-sizing: border-box; }
+
+  * {
+    box-sizing: border-box;
+  }
+
   html, body {
-    margin: 0; width: 100%; height: 100%; overflow: hidden;
-    background: transparent; color: var(--text);
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+    color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   }
-  body { display:flex; align-items:center; justify-content:center; }
-.wrap {
-    display:inline-flex;
-    flex-direction:column;
-    align-items:center;
-    gap:7px;
-    padding:13px 22px 15px;
-    border-radius:15px;
-    background:transparent;
-    text-align:center;
-    max-width:96vw;
-}
 
-.label {
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .wrap {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    padding: 13px 22px 15px;
+    background: transparent;
+    text-align: center;
+    max-width: 96vw;
+  }
+
+  /* Otsikko */
+  .label {
     font-size: clamp(18px, 3vw, 30px);
     font-weight: 900;
     letter-spacing: 0.15em;
     color: #ffffff;
     text-shadow:
-        -1px -1px 2px #000,
-         1px -1px 2px #000,
-        -1px  1px 2px #000,
-         1px  1px 2px #000,
-         0 0 5px #000;
-}
+      -1px -1px 2px #000,
+       1px -1px 2px #000,
+      -1px  1px 2px #000,
+       1px  1px 2px #000,
+       0 0 5px #000;
+  }
 
-.time {
+  /* Ajastimen numerot */
+  .time {
     font-size: clamp(48px, 10vw, 110px);
     font-weight: 900;
     line-height: 1.1;
@@ -52,68 +66,103 @@
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
     text-shadow:
-        -2px -2px 2px #000,
-         2px -2px 2px #000,
-        -2px  2px 2px #000,
-         2px  2px 2px #000,
-         0 0 6px #000;
-}
+      -2px -2px 2px #000,
+       2px -2px 2px #000,
+      -2px  2px 2px #000,
+       2px  2px 2px #000,
+       0 0 6px #000;
+  }
+
+  /* Selittävä teksti */
   .sub {
     color: #ffffff;
     font-size: clamp(14px, 2vw, 22px);
     font-weight: 800;
     letter-spacing: .12em;
     text-shadow:
-        -1px -1px 1px #000,
-         1px -1px 1px #000,
-        -1px  1px 1px #000,
-         1px  1px 1px #000,
-         0 0 4px #000;
-}
+      -1px -1px 1px #000,
+       1px -1px 1px #000,
+      -1px  1px 1px #000,
+       1px  1px 1px #000,
+       0 0 4px #000;
+  }
+
+  /* Moskovan kellonaika */
   .moscow {
     color: #ffffff;
     font-size: clamp(13px, 1.8vw, 19px);
     font-weight: 700;
     letter-spacing: .08em;
     text-shadow:
-        -1px -1px 1px #000,
-         1px -1px 1px #000,
-        -1px  1px 1px #000,
-         1px  1px 1px #000,
-         0 0 4px #000;
-}
+      -1px -1px 1px #000,
+       1px -1px 1px #000,
+      -1px  1px 1px #000,
+       1px  1px 1px #000,
+       0 0 4px #000;
+  }
+
+  /* Hallintapainike */
   #admin {
-    display:none; position:fixed; right:10px; bottom:10px;
-    padding:10px 13px; border:1px solid rgba(255,255,255,.35);
-    border-radius:10px; background:#15191f; color:white;
-    font-size:14px;
+    display: none;
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    padding: 10px 13px;
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 10px;
+    background: #15191f;
+    color: white;
+    font-size: 14px;
   }
+
   #admin button {
-    border:0; border-radius:7px; padding:8px 11px; margin-left:8px;
-    background:#d84a4a; color:white; font-weight:700;
+    border: 0;
+    border-radius: 7px;
+    padding: 8px 11px;
+    margin-left: 8px;
+    background: #d84a4a;
+    color: white;
+    font-weight: 700;
   }
-  body.admin #admin { display:block; }
+
+  body.admin #admin {
+    display: block;
+  }
 </style>
 </head>
+
 <body>
+
   <main class="wrap" aria-label="Jatkuva ajanlaskuri">
+
     <div class="label">4 SEINÄN SISÄLLÄ</div>
+
     <div class="time" id="timer">00:00:00</div>
+
     <div class="sub">AIKA KERTYY JATKUVASTI</div>
+
+    <div class="moscow" id="moscow">MOSKOVA 00:00:00</div>
+
   </main>
-  <div id="admin">Hallinta <button id="reset">Nollaa laskuri</button></div>
+
+  <div id="admin">
+    Hallinta
+    <button id="reset">Nollaa laskuri</button>
+  </div>
 
 <script>
 (() => {
   "use strict";
 
-  const STORAGE_KEY = "moblinKickPersistentCountUpStart_v2";
+  const STORAGE_KEY = "moblinKickPersistentCountUpStart_v3";
 
   function getStart() {
     let saved = localStorage.getItem(STORAGE_KEY);
 
     if (!saved) {
-      const start = new Date(2026, 10, 1, 18, 0, 0, 0);
+      // 1.11.2026 klo 13.30 Suomen aikaa
+      const start = new Date(2026, 10, 1, 13, 30, 0, 0);
+
       saved = String(start.getTime());
       localStorage.setItem(STORAGE_KEY, saved);
     }
@@ -124,6 +173,7 @@
   let startTime = getStart();
 
   const timer = document.getElementById("timer");
+  const moscow = document.getElementById("moscow");
 
   function pad(n) {
     return String(n).padStart(2, "0");
@@ -143,19 +193,36 @@
     timer.textContent = days > 0
       ? `${days} pv ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
       : `${pad(hours + days * 24)}:${pad(minutes)}:${pad(seconds)}`;
+
+    const moscowTime = new Intl.DateTimeFormat("fi-FI", {
+      timeZone: "Europe/Moscow",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23"
+    }).format(new Date());
+
+    moscow.textContent = "MOSKOVA " + moscowTime;
   }
 
-  document.getElementById("reset").addEventListener("click", () => {
-    if (!confirm("Nollataanko laskuri?")) return;
+  // Nollauspainike
+  const resetButton = document.getElementById("reset");
 
-    startTime = Date.now();
-    localStorage.setItem(STORAGE_KEY, String(startTime));
-    render();
-  });
+  if (resetButton) {
+    resetButton.addEventListener("click", () => {
+      if (!confirm("Nollataanko laskuri?")) return;
+
+      startTime = Date.now();
+      localStorage.setItem(STORAGE_KEY, String(startTime));
+      render();
+    });
+  }
 
   render();
-  setInterval(render, 250);
+  setInterval(render, 1000);
+
 })();
 </script>
+
 </body>
 </html>
