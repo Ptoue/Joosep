@@ -147,7 +147,6 @@
 
     <div class="label">HÄTÄTILA</div>
 
-    <div class="days" id="days"></div>
     <div class="time" id="timer">00:00:00</div>
 
     <div class="moscow" id="moscow">MOSKOVA 00:00:00</div>
@@ -200,8 +199,10 @@
     const minutes = Math.floor((elapsed % 3600) / 60);
     const seconds = elapsed % 60;
 
-   timer.textContent =
-  `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+   const totalHours = Math.floor(elapsed / 3600);
+
+timer.textContent =
+  `${String(totalHours).padStart(3, "0")}:${pad(minutes)}:${pad(seconds)}`;
 
     const moscowTime = new Intl.DateTimeFormat("fi-FI", {
       timeZone: "Europe/Moscow",
