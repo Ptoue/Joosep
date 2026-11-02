@@ -200,9 +200,8 @@
     const minutes = Math.floor((elapsed % 3600) / 60);
     const seconds = elapsed % 60;
 
-    timer.textContent = days > 0
-      ? `${days} pv ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
-      : `${pad(hours + days * 24)}:${pad(minutes)}:${pad(seconds)}`;
+   timer.textContent =
+  `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 
     const moscowTime = new Intl.DateTimeFormat("fi-FI", {
       timeZone: "Europe/Moscow",
